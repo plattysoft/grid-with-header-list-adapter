@@ -54,6 +54,15 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 		}
 	}
 
+	public final int getNumColumns() {
+		return mNumColumns;
+	}
+
+	public final void setNumColumns(int numColumns) {
+		mNumColumns = numColumns;
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public final int getCount() {
 		return (int) Math.ceil(getItemCount()*1f / getNumColumns());
@@ -70,6 +79,9 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 		if (viewGroup !=  null) {
 			columnWidth = viewGroup.getWidth()/mNumColumns;    		
 		}
+		else if (view != null) {
+			columnWidth = view.getWidth()/mNumColumns;;
+		}
 		// Make it be rows of the number of columns
 		if (view == null) {
 			// This is items view
@@ -79,64 +91,59 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 			// Now add the sub views to it
 			for (int i = 0; i < mNumColumns; i++) {
 				int currentPos = position * mNumColumns + i;
-				// Get the new View
-				View insideView;
-				if (currentPos < getItemCount()) {            		
-					insideView = getItemView(currentPos, null, viewGroup);            	
-				}
-				else {
-					insideView = new View(mContext);
-					layout.addView(insideView);
-				}            	
-				layout.addView(insideView);
-				// Set the width of this column
-				LayoutParams params = insideView.getLayoutParams();
-				params.width = columnWidth;
-				insideView.setLayoutParams(params);
+				createItemView(currentPos, viewGroup, layout, columnWidth);
 			}            
 		}
 		else {
 			layout = (LinearLayout) view;
-			if (columnWidth == 0) {
-				columnWidth = layout.getWidth()/mNumColumns;
-			}
 			for (int i = 0; i < mNumColumns; i++) {
-				int currentPos = position * mNumColumns + i;
-				View insideView = layout.getChildAt(i);
-				// If there are less views than objects. add a view here
-				if (insideView == null) {
-					insideView = new View(mContext);
-					layout.addView(insideView);
-				}
-				// Set the width of this column
-				LayoutParams params = insideView.getLayoutParams();
-				params.width = columnWidth;
-				insideView.setLayoutParams(params);
-
-				if (currentPos < getItemCount()) {
-					insideView.setVisibility(View.VISIBLE);
-					// Populate the view
-					View theView = getItemView(currentPos, insideView, viewGroup);
-					theView.setOnClickListener(new ListItemClickListener (currentPos));
-					if (!theView.equals(insideView)) {
-						// DO NOT CHANGE THE VIEWS
-					}
-				}
-				else {
-					insideView.setVisibility(View.INVISIBLE);
-				}
+				updateItemView(position, viewGroup, layout, columnWidth, i);
 			}
 		}
-
 		return layout;
 	}
 
-	public final int getNumColumns() {
-		return mNumColumns;
+
+	private void createItemView(int currentPos, ViewGroup viewGroup,	LinearLayout layout, int columnWidth) {		
+		// Get the new View
+		View insideView;
+		if (currentPos < getItemCount()) {            		
+			insideView = getItemView(currentPos, null, viewGroup);            	
+		}
+		else {
+			insideView = new View(mContext);
+		}            	
+		layout.addView(insideView);
+		// Set the width of this column
+		LayoutParams params = insideView.getLayoutParams();
+		params.width = columnWidth;
+		insideView.setLayoutParams(params);
 	}
 
-	public final void setNumColumns(int numColumns) {
-		mNumColumns = numColumns;
-		notifyDataSetChanged();
+	private void updateItemView(int position, ViewGroup viewGroup, LinearLayout layout, int columnWidth, int i) {
+		int currentPos = position * mNumColumns + i;
+		View insideView = layout.getChildAt(i);
+		// If there are less views than objects. add a view here
+		if (insideView == null) {
+			insideView = new View(mContext);
+			layout.addView(insideView);
+		}
+		// Set the width of this column
+		LayoutParams params = insideView.getLayoutParams();
+		params.width = columnWidth;
+		insideView.setLayoutParams(params);
+
+		if (currentPos < getItemCount()) {
+			insideView.setVisibility(View.VISIBLE);
+			// Populate the view
+			View theView = getItemView(currentPos, insideView, viewGroup);
+			theView.setOnClickListener(new ListItemClickListener (currentPos));
+			if (!theView.equals(insideView)) {
+				// DO NOT CHANGE THE VIEWS
+			}
+		}
+		else {
+			insideView.setVisibility(View.INVISIBLE);
+		}
 	}
 }
