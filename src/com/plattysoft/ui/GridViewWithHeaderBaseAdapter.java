@@ -32,7 +32,6 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 		public void onClick(View v) {
 			onGridItemClicked (v, mPosition);
 		}
-
 	}
 
 	private int mNumColumns;
@@ -85,26 +84,28 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 		// Make it be rows of the number of columns
 		if (view == null) {
 			// This is items view
-			layout = new LinearLayout(mContext);
-			layout.setOrientation(LinearLayout.HORIZONTAL);
-			// Here the view is not measured, get the width of the parent if not null
-			// Now add the sub views to it
-			for (int i = 0; i < mNumColumns; i++) {
-				int currentPos = position * mNumColumns + i;
-				createItemView(currentPos, viewGroup, layout, columnWidth);
-			}            
+			layout = createItemRow(position, viewGroup, columnWidth);            
 		}
 		else {
 			layout = (LinearLayout) view;
-			for (int i = 0; i < mNumColumns; i++) {
-				updateItemView(position, viewGroup, layout, columnWidth, i);
-			}
+			updateItemRow(position, viewGroup, layout, columnWidth);
 		}
 		return layout;
 	}
 
+	private LinearLayout createItemRow(int position, ViewGroup viewGroup, int columnWidth) {
+		LinearLayout layout;
+		layout = new LinearLayout(mContext);
+		layout.setOrientation(LinearLayout.HORIZONTAL);
+		// Now add the sub views to it
+		for (int i = 0; i < mNumColumns; i++) {
+			int currentPos = position * mNumColumns + i;
+			createItemView(currentPos, viewGroup, layout, columnWidth);
+		}
+		return layout;
+	}
 
-	private void createItemView(int currentPos, ViewGroup viewGroup,	LinearLayout layout, int columnWidth) {		
+	private void createItemView(int currentPos, ViewGroup viewGroup, LinearLayout layout, int columnWidth) {		
 		// Get the new View
 		View insideView;
 		if (currentPos < getItemCount()) {            		
@@ -120,30 +121,32 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 		insideView.setLayoutParams(params);
 	}
 
-	private void updateItemView(int position, ViewGroup viewGroup, LinearLayout layout, int columnWidth, int i) {
-		int currentPos = position * mNumColumns + i;
-		View insideView = layout.getChildAt(i);
-		// If there are less views than objects. add a view here
-		if (insideView == null) {
-			insideView = new View(mContext);
-			layout.addView(insideView);
-		}
-		// Set the width of this column
-		LayoutParams params = insideView.getLayoutParams();
-		params.width = columnWidth;
-		insideView.setLayoutParams(params);
-
-		if (currentPos < getItemCount()) {
-			insideView.setVisibility(View.VISIBLE);
-			// Populate the view
-			View theView = getItemView(currentPos, insideView, viewGroup);
-			theView.setOnClickListener(new ListItemClickListener (currentPos));
-			if (!theView.equals(insideView)) {
-				// DO NOT CHANGE THE VIEWS
+	private void updateItemRow(int position, ViewGroup viewGroup, LinearLayout layout, int columnWidth) {
+		for (int i=0; i<mNumColumns; i++) {
+			int currentPos = position * mNumColumns + i;
+			View insideView = layout.getChildAt(i);
+			// If there are less views than objects. add a view here
+			if (insideView == null) {
+				insideView = new View(mContext);
+				layout.addView(insideView);
 			}
-		}
-		else {
-			insideView.setVisibility(View.INVISIBLE);
+			// Set the width of this column
+			LayoutParams params = insideView.getLayoutParams();
+			params.width = columnWidth;
+			insideView.setLayoutParams(params);
+
+			if (currentPos < getItemCount()) {
+				insideView.setVisibility(View.VISIBLE);
+				// Populate the view
+				View theView = getItemView(currentPos, insideView, viewGroup);
+				theView.setOnClickListener(new ListItemClickListener (currentPos));
+				if (!theView.equals(insideView)) {
+					// DO NOT CHANGE THE VIEWS
+				}
+			}
+			else {
+				insideView.setVisibility(View.INVISIBLE);
+			}
 		}
 	}
 }
