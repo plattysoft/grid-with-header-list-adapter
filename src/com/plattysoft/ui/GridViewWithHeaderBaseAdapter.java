@@ -100,26 +100,22 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 		// Now add the sub views to it
 		for (int i = 0; i < mNumColumns; i++) {
 			int currentPos = position * mNumColumns + i;
-			createItemView(currentPos, viewGroup, layout, columnWidth);
+			// Get the new View
+			View insideView;
+			if (currentPos < getItemCount()) {            		
+				insideView = getItemView(currentPos, null, viewGroup);            	
+			}
+			else {
+				insideView = new View(mContext);
+			}            	
+			layout.addView(insideView);
+			// Set the width of this column
+			LayoutParams params = insideView.getLayoutParams();
+			params.width = columnWidth;
+			insideView.setLayoutParams(params);
 		}
 		return layout;
-	}
-
-	private void createItemView(int currentPos, ViewGroup viewGroup, LinearLayout layout, int columnWidth) {		
-		// Get the new View
-		View insideView;
-		if (currentPos < getItemCount()) {            		
-			insideView = getItemView(currentPos, null, viewGroup);            	
-		}
-		else {
-			insideView = new View(mContext);
-		}            	
-		layout.addView(insideView);
-		// Set the width of this column
-		LayoutParams params = insideView.getLayoutParams();
-		params.width = columnWidth;
-		insideView.setLayoutParams(params);
-	}
+	}	
 
 	private void updateItemRow(int position, ViewGroup viewGroup, LinearLayout layout, int columnWidth) {
 		for (int i=0; i<mNumColumns; i++) {
