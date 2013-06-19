@@ -1,10 +1,9 @@
 package com.plattysoft.ui;
 
 import android.content.Context;
-
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
@@ -93,7 +92,7 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 		return layout;
 	}
 
-	private LinearLayout createItemRow(int position, ViewGroup viewGroup, int columnWidth) {
+	private LinearLayout createItemRow(int position, ViewGroup viewGroup, int columnWidth) {		
 		LinearLayout layout;
 		layout = new LinearLayout(mContext);
 		layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -104,15 +103,20 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 			View insideView;
 			if (currentPos < getItemCount()) {            		
 				insideView = getItemView(currentPos, null, viewGroup);            	
+				insideView.setVisibility(View.VISIBLE);
+				View theView = getItemView(currentPos, insideView, viewGroup);
+				theView.setOnClickListener(new ListItemClickListener (currentPos));				
 			}
 			else {
 				insideView = new View(mContext);
+				insideView.setVisibility(View.INVISIBLE);
 			}            	
 			layout.addView(insideView);
+//			insideView.setBackgroundResource(android.R.drawable.list_selector_background);
 			// Set the width of this column
 			LayoutParams params = insideView.getLayoutParams();
 			params.width = columnWidth;
-			insideView.setLayoutParams(params);
+			insideView.setLayoutParams(params);			
 		}
 		return layout;
 	}	
@@ -135,7 +139,7 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 				insideView.setVisibility(View.VISIBLE);
 				// Populate the view
 				View theView = getItemView(currentPos, insideView, viewGroup);
-				theView.setOnClickListener(new ListItemClickListener (currentPos));
+				theView.setOnClickListener(new ListItemClickListener (currentPos));				
 				if (!theView.equals(insideView)) {
 					// DO NOT CHANGE THE VIEWS
 				}
