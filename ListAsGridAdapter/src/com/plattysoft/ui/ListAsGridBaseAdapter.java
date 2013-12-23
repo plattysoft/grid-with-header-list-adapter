@@ -30,12 +30,17 @@ public abstract class ListAsGridBaseAdapter extends BaseAdapter {
 	private int mNumColumns;
 	private Context mContext;
 	private GridItemClickListener mGridItemClickListener;
+	private int mBackgroundResource = -1;
 
 	public ListAsGridBaseAdapter(Context context) {
 		mContext = context;
 		mNumColumns = 1;
 	}
 
+	protected void setBackgroundResource(int drawableResId) {
+		mBackgroundResource = drawableResId;
+	}
+	
 	public final void setOnGridClickListener(GridItemClickListener listener) {
 		mGridItemClickListener = listener;
 	}
@@ -89,6 +94,10 @@ public abstract class ListAsGridBaseAdapter extends BaseAdapter {
 	private LinearLayout createItemRow(int position, ViewGroup viewGroup, int columnWidth) {		
 		LinearLayout layout;
 		layout = new LinearLayout(mContext);
+		if (mBackgroundResource > 0) {
+			layout.setBackgroundResource(mBackgroundResource);
+		}
+		int adjustedColumnWidth = columnWidth - (layout.getPaddingLeft() + layout.getPaddingRight())/mNumColumns;
 		layout.setOrientation(LinearLayout.HORIZONTAL);
 		// Now add the sub views to it
 		for (int i = 0; i < mNumColumns; i++) {
@@ -106,16 +115,16 @@ public abstract class ListAsGridBaseAdapter extends BaseAdapter {
 				insideView.setVisibility(View.INVISIBLE);
 			}            	
 			layout.addView(insideView);
-//			insideView.setBackgroundResource(android.R.drawable.list_selector_background);
 			// Set the width of this column
 			LayoutParams params = insideView.getLayoutParams();
-			params.width = columnWidth;
-			insideView.setLayoutParams(params);			
+			params.width = adjustedColumnWidth;
+			insideView.setLayoutParams(params);		
 		}
 		return layout;
 	}	
 
 	private void updateItemRow(int position, ViewGroup viewGroup, LinearLayout layout, int columnWidth) {
+		int realColumnWidth = columnWidth - (layout.getPaddingLeft() + layout.getPaddingRight())/mNumColumns;
 		for (int i=0; i<mNumColumns; i++) {
 			int currentPos = position * mNumColumns + i;
 			View insideView = layout.getChildAt(i);
@@ -126,7 +135,7 @@ public abstract class ListAsGridBaseAdapter extends BaseAdapter {
 			}
 			// Set the width of this column
 			LayoutParams params = insideView.getLayoutParams();
-			params.width = columnWidth;
+			params.width = realColumnWidth;
 			insideView.setLayoutParams(params);
 
 			if (currentPos < getItemCount()) {
