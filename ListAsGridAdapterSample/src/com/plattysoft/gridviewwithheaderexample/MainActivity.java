@@ -1,6 +1,6 @@
 package com.plattysoft.gridviewwithheaderexample;
 
-import com.plattysoft.ui.GridViewWithHeaderBaseAdapter.GridItemClickListener;
+import com.plattysoft.ui.GridItemClickListener;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements GridItemClickListener {
 
-	private GidViewWithHeaderExampleAdapter mAdapter;
+	private ListAsGridExampleAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class MainActivity extends Activity implements GridItemClickListener {
 		TextView tv = (TextView) header.findViewById(R.id.text);
 		tv.setText("This is a Header");
 		listView.addHeaderView(tv);
-		mAdapter = new GidViewWithHeaderExampleAdapter(this);
+		mAdapter = new ListAsGridExampleAdapter(this);
 		mAdapter.setNumColumns(2);
 		mAdapter.setOnGridClickListener(this);
 		listView.setAdapter (mAdapter);

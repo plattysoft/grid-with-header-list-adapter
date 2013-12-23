@@ -11,13 +11,7 @@ import android.widget.LinearLayout;
 /**
  * Created by shalafi on 6/6/13.
  */
-public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
-
-	public interface GridItemClickListener {
-
-		void onGridItemClicked(View v, int position, long itemId);
-
-	}
+public abstract class ListAsGridBaseAdapter extends BaseAdapter {
 
 	private class ListItemClickListener implements OnClickListener {
 
@@ -37,7 +31,7 @@ public abstract class GridViewWithHeaderBaseAdapter extends BaseAdapter {
 	private Context mContext;
 	private GridItemClickListener mGridItemClickListener;
 
-	public GridViewWithHeaderBaseAdapter(Context context) {
+	public ListAsGridBaseAdapter(Context context) {
 		mContext = context;
 		mNumColumns = 1;
 	}
