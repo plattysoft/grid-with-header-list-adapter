@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements GridItemClickListener {
@@ -18,12 +17,14 @@ public class MainActivity extends Activity implements GridItemClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ListView listView = (ListView) findViewById(R.id.listView);
-		View header = View.inflate(getBaseContext(), R.layout.simple_list_item, null);
-		TextView tv = (TextView) header.findViewById(R.id.text);
-		tv.setText("This is a Header");
-		listView.addHeaderView(tv);
+		View header = View.inflate(getBaseContext(), R.layout.sample_header, null);
+		listView.addHeaderView(header);
+		View footer = View.inflate(getBaseContext(), R.layout.sample_footer, null);
+		listView.addFooterView(footer);
+
 		mAdapter = new ListAsGridExampleAdapter(this);
 		mAdapter.setNumColumns(2);
+		mAdapter.setBackgroundResource(R.drawable.row);
 		mAdapter.setOnGridClickListener(this);
 		listView.setAdapter (mAdapter);
 	}

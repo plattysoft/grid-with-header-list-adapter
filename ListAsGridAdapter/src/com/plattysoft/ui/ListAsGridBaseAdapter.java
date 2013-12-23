@@ -37,7 +37,7 @@ public abstract class ListAsGridBaseAdapter extends BaseAdapter {
 		mNumColumns = 1;
 	}
 
-	protected void setBackgroundResource(int drawableResId) {
+	public void setBackgroundResource(int drawableResId) {
 		mBackgroundResource = drawableResId;
 	}
 	
