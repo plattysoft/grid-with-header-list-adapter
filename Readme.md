@@ -1,4 +1,4 @@
-grid-whit-header-list-adapter
+ListAsGridAdapter
 =============================
 
 Library and example of how to display a grid view with a header and/or footer using a normal list view, ti also supports background images
