@@ -91,6 +91,27 @@ public abstract class ListAsGridBaseAdapter extends BaseAdapter {
 		return layout;
 	}
 
+    @Override
+    public int getViewTypeCount() {
+        // Not necessary for only 1 column
+        if (getNumColumns() == 1) return 1;
+
+        return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        // Not necessary for only 1 column
+        if (getNumColumns() == 1) return 0;
+
+        // If we have an odd item count and this is the last row, use the view type with filler views
+        if (getItemCount() % 2 != 0 && position == getCount() - 1) {
+            return 1;
+        }
+
+        return 0;
+    }
+
 	private LinearLayout createItemRow(int position, ViewGroup viewGroup, int columnWidth) {		
 		LinearLayout layout;
 		layout = new LinearLayout(mContext);
